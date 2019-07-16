@@ -59,3 +59,6 @@ storiesOf("Sidebar", module)
       disabledOptions={[1]}
     />
   ));
+
+storiesOf("Navbar", module)
+    .add("Text", () => <h1>Hello world</h1>);

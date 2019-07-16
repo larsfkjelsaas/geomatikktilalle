@@ -1,5 +1,4 @@
-//Based on code from https://material-ui.com/components/buttons/#buttons
-
+//Based on code from https://material-ui.com/components/buttons/#buttons, with modifications to make it dynamic
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -12,13 +11,15 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 
-const SplitButton = ({ defaultOptionIndex, options, disabledOptions }) => {
+const SplitButton = ({ defaultOptionIndex = 0, options, disabledOptions = []}) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const optionNames = options.map((option) => option.name);
   const [selectedIndex, setSelectedIndex] = React.useState(defaultOptionIndex);
 
   function handleClick() {
-    alert(`You clicked ${options[selectedIndex]}`);
+    options[selectedIndex].onButtonClick();
+    // alert(`You clicked ${optionNames[selectedIndex]}`);
   }
 
   function handleMenuItemClick(event, index) {
@@ -40,14 +41,14 @@ const SplitButton = ({ defaultOptionIndex, options, disabledOptions }) => {
 
   return (
     <Grid container>
-      <Grid item xs={12} align="center">
+      <Grid item xs={12} align="left">
         <ButtonGroup
           variant="contained"
           color="primary"
           ref={anchorRef}
           aria-label="Split button"
         >
-          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+          <Button onClick={handleClick}>{optionNames[selectedIndex]}</Button>
           <Button
             color="primary"
             variant="contained"
@@ -76,7 +77,7 @@ const SplitButton = ({ defaultOptionIndex, options, disabledOptions }) => {
               <Paper id="menu-list-grow">
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList>
-                    {options.map((option, index) => (
+                    {optionNames.map((option, index) => (
                       <MenuItem
                         key={option}
                         disabled={disabledOptions.includes(index)}
