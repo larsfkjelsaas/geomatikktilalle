@@ -55,8 +55,7 @@ class Map extends Component {
   addPointLayer(layer) {
     var layerId = this.getLayerId(layer);
     var layerData = this.getLayerData(layer);
-    // var iconName = layerId + "icon";
-    // this._map.addImage(iconName, laye-r.icon);
+
     this.state.activeLayers = [...this.state.activeLayers, this._map.addLayer({
       "id": layerId,
       "type": "symbol",

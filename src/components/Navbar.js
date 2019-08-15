@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Typography from "@material-ui/core/Typography"
 
 const StyledText = styled.h1`
   // text-color: #4e3a40;

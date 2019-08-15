@@ -3,62 +3,18 @@ import styled from "styled-components";
 import SidebarCategory from "./SidebarCategory";
 import SplitButton from "./SplitButton";
 import AnalysisPanel from "./AnalysisPanel";
+import { connect } from "react-redux";
+
+import {
+  analysisChoosen,
+  analysisTriggered
+} from "../action-creators/actionCreator";
 
 const StyledOptions = styled.div`
   display: flex;
-`
+`;
 
-
-
-const Sidebar = ({ className }) => {
-  const operations = [
-    {
-      name: "Buffer",
-      onButtonClick:() => onSplitButtonClick("Buffer"),
-      subOperations: [
-        {
-          name: "Hello",
-          onButtonClick:() => alert("Hello buffer")
-        },
-        {
-          name: "Hei",
-          onButtonClick:() => alert("Hei buffer 2")
-        }
-      ]
-    }, 
-    {
-      name: "Intersection",
-      onButtonClick:() => onSplitButtonClick("Intersection"),
-      subOperations: [
-        {
-          name: "Hei",
-          onButtonClick: () => alert("Hello intersection")
-        },
-        {
-          name: "Hello",
-          onButtonClick: () => alert("Hei intersection 2")
-        }
-      ]
-
-    }];
-  
-  const [activeOperation, setActiveOperation] = React.useState(operations[0]);
-
-
-  const onSplitButtonClick = (buttonName) => {
-    if(buttonName === "Buffer"){
-      setActiveOperation(operations[0]);
-    }
-    else if(buttonName === "Intersection"){
-      setActiveOperation(operations[1]);
-    }
-    else {
-      alert("Not a valid button name");
-    }
-  }
-  
-  
-    console.log(operations);
+const Sidebar = ({ className, analysisChoosen, analysisTriggered }) => {
   return (
     <div className={className}>
       <SidebarCategory
@@ -80,12 +36,10 @@ const Sidebar = ({ className }) => {
           }
         ]}
       />{" "}
-      <AnalysisPanel></AnalysisPanel>
+      <AnalysisPanel />
     </div>
   );
 };
-
-
 
 const styledSidebar = styled(Sidebar)`
   grid-column: 1;
@@ -93,5 +47,7 @@ const styledSidebar = styled(Sidebar)`
   grid-row-end: 3;
   background-color: #4e3a4c;
 `;
+
+
 
 export default styledSidebar;

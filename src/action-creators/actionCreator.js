@@ -13,11 +13,11 @@ export const mathActions = bindActionCreators(
   store.dispatch
 );
 
-const analysisChoosen = analysisName => ({
+export const analysisChoosen = analysisName => ({
   type: "ANLYSIS_CHOOSEN",
   payload: analysisName
 });
-const analysisTriggered = analysisName => ({
+export const analysisTriggered = analysisName => ({
   type: "ANALYSIS_TRIGGERED",
   payload: analysisName
 });

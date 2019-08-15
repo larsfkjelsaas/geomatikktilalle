@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Typography, Paper, Button } from "@material-ui/core";
-import SplitButton from "./SplitButton";
+import React from "react";
+import { Typography, Paper } from "@material-ui/core";
 import styled from "styled-components";
 
 const StyledTypography = styled(Typography)`
