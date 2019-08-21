@@ -1,14 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import SidebarCategory from "./SidebarCategory";
-import SplitButton from "./SplitButton";
 import AnalysisPanel from "./AnalysisPanel";
-import { connect } from "react-redux";
 
-import {
-  analysisChoosen,
-  analysisTriggered
-} from "../action-creators/actionCreator";
 
 const StyledOptions = styled.div`
   display: flex;
