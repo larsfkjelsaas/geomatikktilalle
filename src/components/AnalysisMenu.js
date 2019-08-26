@@ -14,9 +14,16 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
   },
+  details: {
+    display: "block"
+  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -33,7 +40,7 @@ const AnalysisMenu = () => {
         >
           <Typography className={classes.heading}>Analysis</Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        <ExpansionPanelDetails className={classes.details}>
           <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
@@ -41,6 +48,10 @@ const AnalysisMenu = () => {
               id="panel1a-header"
             >
               <Typography className={classes.heading}>Buffer</Typography>
+              <Typography className={classes.secondaryHeading}>
+                {" "}
+                Created at 14:02
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <CardActions className={classes.actions}>

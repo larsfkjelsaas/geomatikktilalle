@@ -14,9 +14,18 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
   },
+  details: {
+    display: "block"
+  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular,
+    flexBasis: "33.33%",
+    flexShrink: 0
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -33,7 +42,7 @@ const DatasetMenu = () => {
         >
           <Typography className={classes.heading}>Datasets</Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        <ExpansionPanelDetails className={classes.details}>
           <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
@@ -41,6 +50,9 @@ const DatasetMenu = () => {
               id="panel2a-header"
             >
               <Typography className={classes.heading}>Skoler</Typography>
+              <Typography className={classes.secondaryHeading}>
+                {"    "} Buffer of barnehager
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <CardActions className={classes.actions}>
