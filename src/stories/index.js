@@ -9,6 +9,8 @@ import Sidebar from "../components/Sidebar";
 import SidebarCategory from "../components/SidebarCategory";
 import CategoryContent from "../components/CategoryContent";
 import SplitButton from "../components/SplitButton";
+import SimpleCard from "../components/Card";
+import ExpansionPanel from "../components/ExpansionPanel";
 
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
@@ -58,7 +60,13 @@ storiesOf("Sidebar", module)
       options={options}
       disabledOptions={[1]}
     />
-  ));
+  ))
+  .add("New Layout", () => (
+    <ExpansionPanel />
+  ))
+  
+  ;
 
-storiesOf("Navbar", module)
-    .add("Text", () => <h1>Hello world</h1>);
+storiesOf("Navbar", module).add("Text", () => <h1>Hello world</h1>);
+
+storiesOf("Card", module).add("Simple Material-UI card", () => <SimpleCard />);
