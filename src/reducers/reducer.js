@@ -21,6 +21,9 @@ const mathReducer = (state = initialState, action) => {
         lastValues: [...state.lastValues, action.payload]
       };
       break;
+    default:
+      console.log("Invalid action type");
+      break;
   }
   return state;
 };
@@ -41,10 +44,16 @@ const analysisReducer = (state = initialAnalysisState, action) => {
       break;
     case "ANALYSIS_TRIGGERED":
       break;
+    default:
+      console.log("Invalid action type");
+      break;
   }
   return state;
 };
 
-const rootReducer = combineReducers({ math: mathReducer, analysis: analysisReducer });
+const rootReducer = combineReducers({
+  math: mathReducer,
+  analysis: analysisReducer
+});
 
 export default rootReducer;

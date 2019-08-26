@@ -48,6 +48,4 @@ const styledSidebar = styled(Sidebar)`
   background-color: #4e3a4c;
 `;
 
-
-
 export default styledSidebar;
