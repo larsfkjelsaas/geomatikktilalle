@@ -11,6 +11,7 @@ import CategoryContent from "../components/CategoryContent";
 import SplitButton from "../components/SplitButton";
 import SimpleCard from "../components/Card";
 import ExpansionPanel from "../components/ExpansionPanel";
+import DatasetMenu from "../components/DatasetMenu";
 
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
@@ -62,7 +63,7 @@ storiesOf("Sidebar", module)
     />
   ))
   .add("New Layout", () => (
-    <ExpansionPanel />
+    <DatasetMenu />
   ))
   
   ;
