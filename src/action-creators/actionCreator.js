@@ -29,3 +29,12 @@ export const analysisActions = bindActionCreators(
   },
   store.dispatch
 );
+
+export const geometryCreateNew = geometry => ({
+  type: "GEOMETRY_CREATE_NEW",
+  payload: geometry
+});
+
+export const geometryActions = bindActionCreators({
+  geometryCreateNew
+});

@@ -6,7 +6,11 @@ const StyledText = styled.h1`
 `;
 
 const Navbar = ({ className }) => {
-  return <div className={className}><StyledText>Hello world</StyledText></div>;
+  return (
+    <div className={className}>
+      <StyledText>Hello world</StyledText>
+    </div>
+  );
 };
 
 const styledNavbar = styled(Navbar)`

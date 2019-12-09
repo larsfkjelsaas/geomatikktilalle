@@ -36,6 +36,7 @@ const initialAnalysisState = {
 const analysisReducer = (state = initialAnalysisState, action) => {
   switch (action.type) {
     case "ANLYSIS_CHOOSEN":
+      console.log("analysis chosen");
       state = {
         ...state,
         currentAnalysis: action.payload,
@@ -45,15 +46,36 @@ const analysisReducer = (state = initialAnalysisState, action) => {
     case "ANALYSIS_TRIGGERED":
       break;
     default:
-      console.log("Invalid action type");
+      console.log("Invalid analysis action type");
       break;
   }
   return state;
 };
 
+const initialGeometryState = {
+  geometries: []
+};
+
+const geometryReducer = (state = initialGeometryState, action) => {
+  switch (action.type) {
+    case "GEOMETRY_CREATE_NEW":
+      state = {
+        ...state,
+        geometries: [...state.geometries, action.payload]
+      };
+      break;
+    default:
+      console.log("Invalid geometry action type");
+      break;
+  }
+
+  return state;
+};
+
 const rootReducer = combineReducers({
   math: mathReducer,
-  analysis: analysisReducer
+  analysis: analysisReducer,
+  geometry: geometryReducer
 });
 
 export default rootReducer;
