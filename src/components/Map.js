@@ -4,6 +4,7 @@ import mapboxgl from "mapbox-gl";
 import schools from "../data/grunnskoler.json";
 import schoolIcon from "../icons/school.svg";
 import buffer from "@turf/buffer";
+import { connect } from "react-redux";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoidG9vbGF0ZSIsImEiOiJjamNraXM3cWMwdHJ4MnFwZ2tuOXdlM29tIn0.YCpu-_2IAVCvVJEEit8WGQ";
@@ -43,7 +44,18 @@ class Map extends Component {
       };
       this.addPointLayer(layer);
     });
-   
+  }
+
+  componentDidUpdate(prevProps) {
+    var newProps = this.props;
+    if (newProps.geometries.length > prevProps.geometries.length) {
+      var layer = {
+        id: "upperschool",
+        data: newProps.geometries[newProps.geometries.length - 1],
+        icon: "/static/media/school.5b4c597e.svg"
+      };
+      this.addPointLayer(layer);
+    }
   }
 
   getLayerId(layer) {
@@ -53,22 +65,25 @@ class Map extends Component {
     return layer.data;
   }
   addPointLayer(layer) {
+    console.log(layer);
     var layerId = this.getLayerId(layer);
     var layerData = this.getLayerData(layer);
 
-    this.state.activeLayers = [...this.state.activeLayers, this._map.addLayer({
-      "id": layerId,
-      "type": "symbol",
-      "source": {
-        type: "geojson",
-        data: layerData
-      },
-      "layout": {
-        "icon-image": "harbor-15"
-
-      },
-      "paint": {}
-    })];
+    this.state.activeLayers = [
+      ...this.state.activeLayers,
+      this._map.addLayer({
+        id: layerId,
+        type: "symbol",
+        source: {
+          type: "geojson",
+          data: layerData
+        },
+        layout: {
+          "icon-image": "harbor-15"
+        },
+        paint: {}
+      })
+    ];
   }
 
   addPolygonLayer(layer) {
@@ -77,20 +92,22 @@ class Map extends Component {
     // var iconName = layerId + "icon";
     // this._map.addImage(iconName, laye-r.icon);
     var newLayer = this._map.addLayer({
-      "id": layerId,
-      "type": "fill",
-      "source": {
+      id: layerId,
+      type: "fill",
+      source: {
         type: "geojson",
         data: layerData
       },
-      "layout": {
+      layout: {
         "fill-color": "#00ff00",
         "fill-opacity": 0.2
       },
-      "paint": {}
+      paint: {}
     });
-    
-    this.setState(this.state.activeLayers = {...this.state.activeLayers, newLayer});
+
+    this.setState(
+      (this.state.activeLayers = { ...this.state.activeLayers, newLayer })
+    );
   }
 
   createBuffer(layer, value) {
@@ -99,7 +116,7 @@ class Map extends Component {
     return buffered;
   }
 
-  onBufferButtonClick(){
+  onBufferButtonClick() {
     var buffered = this.createBuffer(this.state.activeLayers[0], 50);
     this.addPolygonLayer(buffered);
   }
@@ -121,4 +138,10 @@ const StyledMap = styled(Map)`
   grid-row-end: 4;
 `;
 
-export default StyledMap;
+const select = appState => {
+  return {
+    geometries: appState.geometry.geometries
+  };
+};
+
+export default connect(select)(StyledMap);

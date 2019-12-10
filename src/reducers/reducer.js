@@ -22,7 +22,7 @@ const mathReducer = (state = initialState, action) => {
       };
       break;
     default:
-      console.log("Invalid action type");
+      console.log("Invalid math action type");
       break;
   }
   return state;
