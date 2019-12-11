@@ -1,17 +1,21 @@
 import React from "react";
 import styled from "styled-components";
-import SplitButton from "./SplitButton";
-import { analysisChoosen, analysisTriggered } from "../action-creators/actionCreator";
+import SplitButton from "../SplitButton";
+import {
+  analysisChoosen,
+  analysisTriggered
+} from "../../action-creators/actionCreator";
 import { connect } from "react-redux";
 const StyledOptions = styled.div`
   display: flex;
 `;
 
-const AnalysisPanel = ({ 
-  currentAnalysis, 
-  analysisChoosen, 
-  analysisTriggered, 
-  ...props }) => {
+const AnalysisPanel = ({
+  currentAnalysis,
+  analysisChoosen,
+  analysisTriggered,
+  ...props
+}) => {
   const operations = [
     {
       name: "Buffer",
@@ -72,9 +76,6 @@ const actions = {
   analysisTriggered: analysisTriggered
 };
 
-const connector = connect(
-  select,
-  actions
-);
+const connector = connect(select, actions);
 
 export default connector(AnalysisPanel);

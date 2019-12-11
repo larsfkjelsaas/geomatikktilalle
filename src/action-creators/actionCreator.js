@@ -17,9 +17,9 @@ export const analysisChoosen = analysisName => ({
   type: "ANLYSIS_CHOOSEN",
   payload: analysisName
 });
-export const analysisTriggered = analysisName => ({
+export const analysisTriggered = value => ({
   type: "ANALYSIS_TRIGGERED",
-  payload: analysisName
+  payload: { value: value }
 });
 
 export const analysisActions = bindActionCreators(
@@ -31,7 +31,7 @@ export const analysisActions = bindActionCreators(
 );
 
 export const geometryCreateNew = geometry => ({
-  type: "GEOMETRY_CREATE_NEW",
+  type: "GEOMETRY_CREATE_TRIGGERED",
   payload: geometry
 });
 

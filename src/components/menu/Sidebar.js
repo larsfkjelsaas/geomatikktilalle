@@ -6,21 +6,28 @@ import Button from "@material-ui/core/Button";
 import AnalysisPanel from "./AnalysisPanel";
 import {
   analysisChoosen,
-  geometryCreateNew
-} from "../action-creators/actionCreator";
+  geometryCreateNew,
+  analysisTriggered
+} from "../../action-creators/actionCreator";
 import { connect } from "react-redux";
-import schools from "../data/videregaaende.json";
+import schools from "../../data/videregaaende.json";
 
-const Sidebar = ({ className, analysisChoosen, geometryCreateNew }) => {
+const Sidebar = ({
+  className,
+  analysisChoosen,
+  geometryCreateNew,
+  analysisTriggered
+}) => {
   return (
     <div className={className}>
       <DatasetMenu></DatasetMenu>
       <AnalysisMenu></AnalysisMenu>
       <AnalysisPanel></AnalysisPanel>
-      <Button onClick={() => analysisChoosen("Buffer")}>Buffer</Button>
+      <Button onClick={() => analysisChoosen("Buffer")}>Choose buffer</Button>
       <Button onClick={() => geometryCreateNew(schools)}>
         Create geometry
       </Button>
+      <Button onClick={() => analysisTriggered(200)}>Trigger</Button>
     </div>
   );
 };
@@ -39,7 +46,8 @@ const select = appState => {
 };
 const actions = {
   analysisChoosen: analysisChoosen,
-  geometryCreateNew: geometryCreateNew
+  geometryCreateNew: geometryCreateNew,
+  analysisTriggered: analysisTriggered
 };
 
 const connector = connect(select, actions);

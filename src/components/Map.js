@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import mapboxgl from "mapbox-gl";
-import schools from "../data/grunnskoler.json";
-import schoolIcon from "../icons/school.svg";
-import buffer from "@turf/buffer";
 import { connect } from "react-redux";
 
 mapboxgl.accessToken =
@@ -36,89 +33,65 @@ class Map extends Component {
         zoom: map.getZoom().toFixed(2)
       });
     });
-    map.on("load", () => {
-      let layer = {
-        id: "schools",
-        data: schools,
-        icon: schoolIcon
-      };
-      this.addPointLayer(layer);
-    });
   }
 
   componentDidUpdate(prevProps) {
     var newProps = this.props;
-    if (newProps.geometries.length > prevProps.geometries.length) {
-      var layer = {
-        id: "upperschool",
-        data: newProps.geometries[newProps.geometries.length - 1],
-        icon: "/static/media/school.5b4c597e.svg"
-      };
-      this.addPointLayer(layer);
+    var layers = newProps.layers;
+
+    if (layers.length > prevProps.layers.length) {
+      let layer = layers[layers.length - 1];
+      switch (layer.type) {
+        case "point":
+          this.addPointLayer(layer);
+          break;
+        case "polygon":
+          this.addPolygonLayer(layer);
+          break;
+        default:
+          console.log("invalid layer type");
+          break;
+      }
     }
   }
 
-  getLayerId(layer) {
-    return layer.id;
-  }
-  getLayerData(layer) {
-    return layer.data;
-  }
   addPointLayer(layer) {
-    console.log(layer);
-    var layerId = this.getLayerId(layer);
-    var layerData = this.getLayerData(layer);
-
-    this.state.activeLayers = [
-      ...this.state.activeLayers,
-      this._map.addLayer({
-        id: layerId,
-        type: "symbol",
-        source: {
-          type: "geojson",
-          data: layerData
-        },
-        layout: {
-          "icon-image": "harbor-15"
-        },
-        paint: {}
-      })
-    ];
-  }
-
-  addPolygonLayer(layer) {
-    var layerId = this.getLayerId(layer);
-    var layerData = this.getLayerData(layer);
-    // var iconName = layerId + "icon";
-    // this._map.addImage(iconName, laye-r.icon);
-    var newLayer = this._map.addLayer({
-      id: layerId,
-      type: "fill",
+    let newLayer = this._map.addLayer({
+      id: layer.name,
+      type: "symbol",
       source: {
         type: "geojson",
-        data: layerData
+        data: layer.geometry
       },
       layout: {
-        "fill-color": "#00ff00",
-        "fill-opacity": 0.2
+        "icon-image": "harbor-15"
       },
       paint: {}
     });
 
-    this.setState(
-      (this.state.activeLayers = { ...this.state.activeLayers, newLayer })
-    );
+    this.setState({
+      activeLayers: [...this.state.activeLayers, newLayer]
+    });
   }
 
-  createBuffer(layer, value) {
-    var buffered = buffer(layer, value);
-    console.log(buffered);
-    return buffered;
-  }
+  addPolygonLayer(layer) {
+    var newLayer = this._map.addLayer({
+      id: layer.name,
+      type: "fill",
+      source: {
+        type: "geojson",
+        data: layer.geometry
+      },
+      // layout: {
+      //   "fill-color": "#00ff00",
+      //   "fill-opacity": 0.2
+      // },
+      paint: {}
+    });
 
-  onBufferButtonClick() {
-    var buffered = this.createBuffer(this.state.activeLayers[0], 50);
-    this.addPolygonLayer(buffered);
+    this.setState({
+      activeLayers: [...this.state.activeLayers, newLayer]
+    });
   }
 
   render() {
@@ -140,7 +113,8 @@ const StyledMap = styled(Map)`
 
 const select = appState => {
   return {
-    geometries: appState.geometry.geometries
+    selectedLayer: appState.geometry.selectedLayer,
+    layers: appState.geometry.layers
   };
 };
 

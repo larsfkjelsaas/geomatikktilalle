@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
 import AppLayout from "./components/AppLayout";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
+import Sidebar from "./components/menu/Sidebar";
+import Navbar from "./components/menu/Navbar";
 import Map from "./components/Map";
 import locations from "./data/locations.json";
 
