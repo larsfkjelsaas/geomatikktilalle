@@ -34,7 +34,15 @@ export const geometryCreateNew = geometry => ({
   type: "GEOMETRY_CREATE_TRIGGERED",
   payload: geometry
 });
-
-export const geometryActions = bindActionCreators({
-  geometryCreateNew
+export const geometryStartDeletion = name => ({
+  type: "GEOMETRY_DELETE_STARTED",
+  payload: name
 });
+
+export const geometryActions = bindActionCreators(
+  {
+    geometryCreateNew,
+    geometryStartDeletion
+  },
+  store.dispatch
+);

@@ -18,7 +18,7 @@ export const geometryReducer = (state = initialGeometryState, action) => {
       };
       break;
     case "ANALYSIS_TRIGGERED":
-      state = analysisTriggered(state, action.payload);
+      state = resolveAnalysisTrigger(state, action.payload);
       break;
     case "GEOMETRY_CREATE_TRIGGERED":
       let geometry = action.payload;
@@ -33,23 +33,29 @@ export const geometryReducer = (state = initialGeometryState, action) => {
       };
       state = addLayer(state, layer);
       break;
+    case "GEOMETRY_DELETE_STARTED":
+      console.log("started deletion of" + action.payload);
+      break;
+    case "GEOMETRY_DELETE_FINISHED":
+      console.log("finished deletion");
+      break;
     default:
       break;
   }
   return state;
 };
 
-function analysisTriggered(state, payload) {
+function resolveAnalysisTrigger(state, payload) {
   switch (initialGeometryState.selectedAnalysis) {
     case "buffer":
-      return bufferAnalysisTriggered(state, payload);
+      return resolveBufferTrigger(state, payload);
     default:
       console.log("Selected analysis is invalid");
       break;
   }
 }
 
-function bufferAnalysisTriggered(state, payload) {
+function resolveBufferTrigger(state, payload) {
   var { value } = payload;
   var geom = state.layers[state.selectedLayer].geometry;
   var bufferGeom = createBuffer(geom, value);
