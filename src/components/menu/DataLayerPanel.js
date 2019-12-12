@@ -9,8 +9,6 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { geometryStartDeletion } from "../../action-creators/actionCreator";
-import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,15 +29,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DataLayerPanel = ({ name, geometryStartDeletion }) => {
+const DataLayerPanel = ({
+  name,
+  index,
+  geometryStartDeletion,
+  selectLayer,
+  selectedLayer
+}) => {
   const classes = useStyles();
+  console.log(index);
+  console.log(selectedLayer);
   return (
-    <ExpansionPanel>
+    <ExpansionPanel
+      expanded={index === selectedLayer}
+      onChange={() => selectLayer(index)}
+    >
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2a-content"
         id="panel2a-header"
-        onClick={() => console.log("opened or closed")}
+        // onClick={() => selectLayer(index)}
       >
         <Typography className={classes.heading}>{name}</Typography>
         {/* <Typography className={classes.secondaryHeading}>
@@ -58,11 +67,5 @@ const DataLayerPanel = ({ name, geometryStartDeletion }) => {
     </ExpansionPanel>
   );
 };
-const select = appState => {
-  return {};
-};
-const actions = {
-  geometryStartDeletion: geometryStartDeletion
-};
 
-export default connect(select, actions)(DataLayerPanel);
+export default DataLayerPanel;

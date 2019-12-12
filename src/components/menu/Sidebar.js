@@ -11,6 +11,7 @@ import {
 } from "../../action-creators/actionCreator";
 import { connect } from "react-redux";
 import schools from "../../data/videregaaende.json";
+import ColorPicker from "./ColorPicker";
 
 const Sidebar = ({
   className,
@@ -20,14 +21,15 @@ const Sidebar = ({
 }) => {
   return (
     <div className={className}>
-      <DatasetMenu></DatasetMenu>
-      <AnalysisMenu></AnalysisMenu>
-      <AnalysisPanel></AnalysisPanel>
       <Button onClick={() => analysisChoosen("Buffer")}>Choose buffer</Button>
       <Button onClick={() => geometryCreateNew(schools)}>
         Create geometry
       </Button>
       <Button onClick={() => analysisTriggered(200)}>Trigger</Button>
+      <DatasetMenu></DatasetMenu>
+      <AnalysisMenu></AnalysisMenu>
+      <AnalysisPanel></AnalysisPanel>
+      <ColorPicker />
     </div>
   );
 };

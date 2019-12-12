@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import mapboxgl from "mapbox-gl";
 import { connect } from "react-redux";
+import { geomatryFinalizeDeletion } from "../action-creators/actionCreator";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoidG9vbGF0ZSIsImEiOiJjamNraXM3cWMwdHJ4MnFwZ2tuOXdlM29tIn0.YCpu-_2IAVCvVJEEit8WGQ";
@@ -53,6 +54,9 @@ class Map extends Component {
           break;
       }
     }
+    if (newProps.layersToDelete.length > 0) {
+      newProps.layersToDelete.forEach(layer => this.removeMapLayer(layer));
+    }
   }
 
   addPointLayer(layer) {
@@ -94,6 +98,17 @@ class Map extends Component {
     });
   }
 
+  removeMapLayer(layerToDelete) {
+    //check whether delete list is stale
+    if (!this._map.getSource(layerToDelete.name)) {
+      return;
+    }
+
+    this._map.removeLayer(layerToDelete.name);
+    this._map.removeSource(layerToDelete.name);
+    this.props.delete_finalize();
+  }
+
   render() {
     return (
       <div
@@ -114,8 +129,13 @@ const StyledMap = styled(Map)`
 const select = appState => {
   return {
     selectedLayer: appState.geometry.selectedLayer,
-    layers: appState.geometry.layers
+    layers: appState.geometry.layers,
+    layersToDelete: appState.geometry.layersToDelete
   };
 };
 
-export default connect(select)(StyledMap);
+const actions = {
+  delete_finalize: geomatryFinalizeDeletion
+};
+
+export default connect(select, actions)(StyledMap);

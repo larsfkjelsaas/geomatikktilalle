@@ -11,6 +11,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import DataLayerPanel from "./DataLayerPanel";
+import {
+  geometryStartDeletion,
+  selectLayer
+} from "../../action-creators/actionCreator";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,7 +35,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DatasetMenu = ({ selectedLayer, layers }) => {
+const DatasetMenu = ({
+  selectedLayer,
+  layers,
+  geometryStartDeletion,
+  selectLayer
+}) => {
   const classes = useStyles();
 
   return (
@@ -46,9 +55,15 @@ const DatasetMenu = ({ selectedLayer, layers }) => {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <>
-            {layers.map(layer => (
+            {layers.map((layer, index) => (
               <div className="layer" key={layer.name}>
-                <DataLayerPanel name={layer.name}></DataLayerPanel>
+                <DataLayerPanel
+                  name={layer.name}
+                  index={index}
+                  geometryStartDeletion={geometryStartDeletion}
+                  selectLayer={selectLayer}
+                  selectedLayer={selectedLayer}
+                ></DataLayerPanel>
               </div>
             ))}
           </>
@@ -58,11 +73,14 @@ const DatasetMenu = ({ selectedLayer, layers }) => {
   );
 };
 
-const select = appState => {
-  return {
-    selectedLayer: appState.geometry.selectedLayer,
-    layers: appState.geometry.layers
-  };
+const select = appState => ({
+  selectedLayer: appState.geometry.selectedLayer,
+  layers: appState.geometry.layers
+});
+
+const actions = {
+  geometryStartDeletion: geometryStartDeletion,
+  selectLayer: selectLayer
 };
 
-export default connect(select)(DatasetMenu);
+export default connect(select, actions)(DatasetMenu);

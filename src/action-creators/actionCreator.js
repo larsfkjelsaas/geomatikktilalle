@@ -39,10 +39,21 @@ export const geometryStartDeletion = name => ({
   payload: name
 });
 
+export const geomatryFinalizeDeletion = () => ({
+  type: "GEOMETRY_DELETE_FINALIZED"
+});
+
+export const selectLayer = index => ({
+  type: "LAYER_SELECTED",
+  payload: index
+});
+
 export const geometryActions = bindActionCreators(
   {
     geometryCreateNew,
-    geometryStartDeletion
+    geometryStartDeletion,
+    geomatryFinalizeDeletion,
+    selectLayer
   },
   store.dispatch
 );

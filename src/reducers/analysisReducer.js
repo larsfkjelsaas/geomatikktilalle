@@ -1,10 +1,11 @@
 import createBuffer from "../components/analysis/buffer";
 
-const initialGeometryState = {
+export const initialGeometryState = {
   selectedAnalysis: "buffer",
   triggeredAnalyses: [],
   selectedLayer: -1,
-  layers: []
+  layers: [],
+  layersToDelete: []
 };
 
 export const geometryReducer = (state = initialGeometryState, action) => {
@@ -22,10 +23,8 @@ export const geometryReducer = (state = initialGeometryState, action) => {
       break;
     case "GEOMETRY_CREATE_TRIGGERED":
       let geometry = action.payload;
-      let name = "new_geometry";
-      if (geometry.name) {
-        name = geometry.name;
-      }
+      let name = findUniqueName(state, geometry);
+
       var layer = {
         geometry: geometry,
         name: name,
@@ -34,10 +33,34 @@ export const geometryReducer = (state = initialGeometryState, action) => {
       state = addLayer(state, layer);
       break;
     case "GEOMETRY_DELETE_STARTED":
-      console.log("started deletion of" + action.payload);
+      const layerToDelete = state.layers.find(
+        layer => layer.name === action.payload
+      );
+      state = {
+        ...state,
+        layersToDelete: [...state.layersToDelete, layerToDelete]
+      };
       break;
-    case "GEOMETRY_DELETE_FINISHED":
-      console.log("finished deletion");
+    case "GEOMETRY_DELETE_FINALIZED":
+      state = {
+        ...state,
+        layers: state.layers.filter(
+          layer => layer.name !== state.layersToDelete[0].name
+        ),
+        layersToDelete: []
+      };
+      break;
+
+    case "LAYER_SELECTED":
+      let layerIndex = action.payload;
+      //Pane is already open, close it instead
+      if (state.selectedLayer === layerIndex) {
+        layerIndex = -1;
+      }
+      state = {
+        ...state,
+        selectedLayer: layerIndex
+      };
       break;
     default:
       break;
@@ -60,9 +83,12 @@ function resolveBufferTrigger(state, payload) {
   var geom = state.layers[state.selectedLayer].geometry;
   var bufferGeom = createBuffer(geom, value);
 
+  var name = state.layers[state.selectedLayer].name;
+  name = findUniqueName(state, geom, name, "_buffer");
+
   var layer = {
     geometry: bufferGeom,
-    name: state.layers[state.selectedLayer].name + "_buffer",
+    name: name,
     type: "polygon"
   };
   state = addLayer(state, layer, "buffer");
@@ -71,6 +97,10 @@ function resolveBufferTrigger(state, payload) {
 }
 
 function addLayer(state, layer, analysisType = "new") {
+  //Make a separate variable for display name in case we want to change it in the UI
+  layer.displayName = layer.name;
+
+  //If no layer was selected previously, select this
   let selectedLayer = state.selectedLayer;
   if (selectedLayer === -1) {
     selectedLayer = 0;
@@ -82,4 +112,33 @@ function addLayer(state, layer, analysisType = "new") {
     selectedLayer: selectedLayer
   };
   return state;
+}
+
+function findUniqueName(state, geometry, name = "new_geometry", affix = "") {
+  //If no name is given and the dataset includes a name, use it
+  if (geometry.name && name === "new_geometry") {
+    name = geometry.name;
+  }
+
+  //append any affix, usually to signify how the layer was created (e.g _buffer)
+  name = name + affix;
+
+  //check whether name is already in use, and try appending _1, _2, _3 etc until a name not in use is found
+  function isNameUnique(name, layers) {
+    if (layers.find(layer => layer.name === name) === undefined) {
+      return true;
+    } else return false;
+  }
+
+  var originalName = name;
+  var nameIsUnique = isNameUnique(name, state.layers);
+  var i = 1;
+  while (!nameIsUnique) {
+    name = originalName + "_" + i;
+    i += 1;
+
+    nameIsUnique = isNameUnique(name, state.layers);
+  }
+
+  return name;
 }
