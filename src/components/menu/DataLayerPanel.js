@@ -37,8 +37,6 @@ const DataLayerPanel = ({
   selectedLayer
 }) => {
   const classes = useStyles();
-  console.log(index);
-  console.log(selectedLayer);
   return (
     <ExpansionPanel
       expanded={index === selectedLayer}

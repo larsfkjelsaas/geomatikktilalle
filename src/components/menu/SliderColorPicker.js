@@ -1,21 +1,32 @@
 import React from "react";
 import { SliderPicker } from "react-color";
+import { selectColor } from "../../action-creators/actionCreator";
+import { connect } from "react-redux";
+import AlphaPicker from "./AlphaPicker";
 
-export default class SliderColorPicker extends React.Component {
-  state = {
-    background: "#001eff"
-  };
-
-  handleChangeComplete = color => {
-    this.setState({ background: color.hex });
-  };
-
-  render() {
-    return (
+const SliderColorPicker = ({ activeColor, selectColor }) => {
+  return (
+    <div>
       <SliderPicker
-        color={this.state.background}
-        onChangeComplete={this.handleChangeComplete}
+        color={activeColor}
+        onChangeComplete={color => selectColor(color.hex)}
       />
-    );
-  }
-}
+      <AlphaPicker
+        color={activeColor}
+        onChange={color => selectColor(color.hex)}
+      />
+    </div>
+  );
+};
+
+const select = appState => {
+  return {
+    activeColor: appState.geometry.activeColor
+  };
+};
+
+const actions = {
+  selectColor: selectColor
+};
+
+export default connect(select, actions)(SliderColorPicker);

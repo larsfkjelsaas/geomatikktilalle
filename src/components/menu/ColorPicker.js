@@ -6,9 +6,9 @@ import SliderColorPicker from "./SliderColorPicker";
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3, 2),
-    width: "80%",
+    width: "90%",
     margin: "auto",
-    marginTop: "20px"
+    backgroundColor: "#e8e8e8"
   }
 }));
 

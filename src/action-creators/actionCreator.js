@@ -48,12 +48,18 @@ export const selectLayer = index => ({
   payload: index
 });
 
+export const selectColor = hex => ({
+  type: "COLOR_CHANGE",
+  payload: hex
+});
+
 export const geometryActions = bindActionCreators(
   {
     geometryCreateNew,
     geometryStartDeletion,
     geomatryFinalizeDeletion,
-    selectLayer
+    selectLayer,
+    selectColor
   },
   store.dispatch
 );

@@ -39,7 +39,9 @@ class Map extends Component {
   componentDidUpdate(prevProps) {
     var newProps = this.props;
     var layers = newProps.layers;
+    var prevLayers = prevProps.layers;
 
+    //new layer, add it
     if (layers.length > prevProps.layers.length) {
       let layer = layers[layers.length - 1];
       switch (layer.type) {
@@ -54,6 +56,18 @@ class Map extends Component {
           break;
       }
     }
+    //No new layers, can compare new and old props
+    else {
+      if (layers.length > 0 && newProps.selectedLayer >= 0) {
+        let selected = newProps.selectedLayer;
+
+        if (layers[selected].color !== prevLayers[selected].color) {
+          this.setColorOfLayer(layers[selected]);
+        }
+      }
+    }
+
+    //Delete layers marked for deletion
     if (newProps.layersToDelete.length > 0) {
       newProps.layersToDelete.forEach(layer => this.removeMapLayer(layer));
     }
@@ -62,15 +76,12 @@ class Map extends Component {
   addPointLayer(layer) {
     let newLayer = this._map.addLayer({
       id: layer.name,
-      type: "symbol",
+      type: "circle",
       source: {
         type: "geojson",
         data: layer.geometry
       },
-      layout: {
-        "icon-image": "harbor-15"
-      },
-      paint: {}
+      paint: { "circle-color": layer.color }
     });
 
     this.setState({
@@ -90,7 +101,7 @@ class Map extends Component {
       //   "fill-color": "#00ff00",
       //   "fill-opacity": 0.2
       // },
-      paint: {}
+      paint: { "fill-color": layer.color }
     });
 
     this.setState({
@@ -107,6 +118,17 @@ class Map extends Component {
     this._map.removeLayer(layerToDelete.name);
     this._map.removeSource(layerToDelete.name);
     this.props.delete_finalize();
+  }
+
+  setColorOfLayer(layer) {
+    let colorVariable = "";
+    if (layer.type === "point") {
+      colorVariable = "circle-color";
+    } else if (layer.type === "polygon") {
+      colorVariable = "fill-color";
+    }
+
+    this._map.setPaintProperty(layer.name, colorVariable, layer.color);
   }
 
   render() {

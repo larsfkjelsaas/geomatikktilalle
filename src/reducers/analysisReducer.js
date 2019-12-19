@@ -5,7 +5,8 @@ export const initialGeometryState = {
   triggeredAnalyses: [],
   selectedLayer: -1,
   layers: [],
-  layersToDelete: []
+  layersToDelete: [],
+  activeColor: "#001eff"
 };
 
 export const geometryReducer = (state = initialGeometryState, action) => {
@@ -62,6 +63,33 @@ export const geometryReducer = (state = initialGeometryState, action) => {
         selectedLayer: layerIndex
       };
       break;
+    case "COLOR_CHANGE":
+      //Create a new layers array that is the same except for one color change to selected layer
+      if (state.selectedLayer >= 0) {
+        let layers = state.layers.map((layer, index) => {
+          if (index !== state.selectedLayer) {
+            return layer;
+          } else {
+            return {
+              ...layer,
+              color: action.payload
+            };
+          }
+        });
+
+        state = {
+          ...state,
+          activeColor: action.payload,
+          layers: layers
+        };
+      } else {
+        state = {
+          ...state,
+          activeColor: action.payload
+        };
+      }
+
+      break;
     default:
       break;
   }
@@ -100,6 +128,8 @@ function addLayer(state, layer, analysisType = "new") {
   //Make a separate variable for display name in case we want to change it in the UI
   layer.displayName = layer.name;
 
+  //Initialize color
+  layer.color = state.activeColor;
   //If no layer was selected previously, select this
   let selectedLayer = state.selectedLayer;
   if (selectedLayer === -1) {
