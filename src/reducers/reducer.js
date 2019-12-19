@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { geometryReducer } from "./analysisReducer";
+import { geometryReducer } from "./geometryReducer";
 import { fileReducer } from "./fileReducer";
 
 const initialState = {
