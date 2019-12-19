@@ -63,3 +63,15 @@ export const geometryActions = bindActionCreators(
   },
   store.dispatch
 );
+
+export const fileUploaded = payload => ({
+  type: "FILE_UPLOADED",
+  payload: payload
+});
+
+export const fileActions = bindActionCreators(
+  {
+    fileUploaded
+  },
+  store.dispatch
+);

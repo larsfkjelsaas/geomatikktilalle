@@ -1,5 +1,7 @@
 import { combineReducers } from "redux";
 import { geometryReducer } from "./analysisReducer";
+import { fileReducer } from "./fileReducer";
+
 const initialState = {
   result: 1,
   lastValues: []
@@ -29,7 +31,8 @@ const mathReducer = (state = initialState, action) => {
 
 const rootReducer = combineReducers({
   math: mathReducer,
-  geometry: geometryReducer
+  geometry: geometryReducer,
+  file: fileReducer
 });
 
 export default rootReducer;
