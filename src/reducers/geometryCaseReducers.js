@@ -19,6 +19,7 @@ export const analysisTriggered = (state, action) => {
 };
 
 export const geometryCreateTriggered = (state, action) => {
+  console.log(action);
   let geometry = action.payload;
   let name = findUniqueName(state, geometry);
 

@@ -1,18 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
-import DatasetMenu from "./DatasetMenu";
-import AnalysisMenu from "./AnalysisMenu";
 import Button from "@material-ui/core/Button";
-import AnalysisPanel from "./AnalysisPanel";
 import {
   analysisChoosen,
   geometryCreateNew,
   analysisTriggered
 } from "../../action-creators/actionCreator";
-import { connect } from "react-redux";
-import schools from "../../data/videregaaende.json";
-import ColorMenu from "./ColorMenu";
 import NewFileMenu from "./NewFileMenu";
+import DatasetMenu from "./DatasetMenu";
+import AnalysisMenu from "./AnalysisMenu";
+import ColorMenu from "./ColorMenu";
+import schools from "../../data/videregaaende.json";
 
 const Sidebar = ({
   className,
@@ -22,16 +21,15 @@ const Sidebar = ({
 }) => {
   return (
     <div className={className}>
-      
       <Button onClick={() => analysisChoosen("Buffer")}>Choose buffer</Button>
       <Button onClick={() => geometryCreateNew(schools)}>
         Create geometry
       </Button>
       <Button onClick={() => analysisTriggered(200)}>Trigger</Button>
-      <NewFileMenu/>
-      <DatasetMenu/>
-      <AnalysisMenu/>
-      <ColorMenu/>
+      <NewFileMenu />
+      <DatasetMenu />
+      <AnalysisMenu />
+      <ColorMenu />
     </div>
   );
 };
@@ -54,6 +52,4 @@ const actions = {
   analysisTriggered: analysisTriggered
 };
 
-const connector = connect(select, actions);
-
-export default connector(styledSidebar);
+export default connect(select, actions)(styledSidebar);

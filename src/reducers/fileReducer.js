@@ -1,3 +1,4 @@
+
 const initialState = {
     result: 1,
     lastValues: []
@@ -6,7 +7,6 @@ const initialState = {
  export const fileReducer = (state = initialState, action) => {
     switch (action.type) {
       case "FILES_UPLOADED":
-        console.log(action.payload);
         break;
       default:
         break;

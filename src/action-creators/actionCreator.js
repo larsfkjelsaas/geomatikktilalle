@@ -65,8 +65,8 @@ export const geometryActions = bindActionCreators(
 );
 
 export const fileUploaded = files => ({
-  type: "FILES_UPLOADED",
-  payload: files
+  type: "GEOMETRY_CREATE_TRIGGERED",
+  payload: JSON.parse(files)
 });
 
 export const fileActions = bindActionCreators(

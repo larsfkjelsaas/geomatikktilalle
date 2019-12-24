@@ -2,11 +2,23 @@ import React from "react";
 // Import the useDropzone hooks from react-dropzone
 import { useDropzone } from "react-dropzone";
 import { connect } from "react-redux";
-import {
-    fileUploaded
-  } from "../../action-creators/actionCreator";
+import { fileUploaded } from "../../action-creators/actionCreator";
 
-const FileUpload = ({ onDrop, accept }) => {
+
+
+const FileUpload = ({ fileUploaded, accept }) => {
+  const onDrop = files => {
+    if (files && files[0]) {
+      let reader = new FileReader();
+      let file = files[0];
+  
+      reader.onloadend = () => {
+        fileUploaded(reader.result);
+      };
+      reader.readAsText(file);
+    }
+  };
+  
   // Initializing useDropzone hooks with options
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -35,7 +47,7 @@ const FileUpload = ({ onDrop, accept }) => {
 };
 
 const actions = {
-    onDrop: fileUploaded
-  };
+  fileUploaded: fileUploaded
+};
 
 export default connect(null, actions)(FileUpload);
