@@ -63,7 +63,7 @@ export const layerSelected = (state, action) => {
   };
 };
 
-export const dataListRearranged = (state, action) => {
+export const layersRearranged = (state, action) => {
   const layers = Array.from(state.layers);
   const { destination, source } = action.payload;
   const newLayers = moveItemInArray(layers, source.index, destination.index);
@@ -75,7 +75,15 @@ export const dataListRearranged = (state, action) => {
   return {
     ...state,
     layers: newLayers,
-    selectedLayer: selectedLayer
+    selectedLayer: selectedLayer,
+    layerToMove: destination.index
+  }
+};
+
+export const layersRearrangedDone = (state, action) => {
+  return {
+    ...state,
+    layerToMove: -1
   }
 };
 
@@ -138,7 +146,7 @@ function addLayer(state, layer, analysisType = "new") {
   }
   state = {
     ...state,
-    layers: [...state.layers, layer],
+    layers: [layer, ...state.layers],
     triggeredAnalyses: [...state.triggeredAnalyses, analysisType],
     selectedLayer: selectedLayer
   };

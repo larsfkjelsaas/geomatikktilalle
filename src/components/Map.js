@@ -43,7 +43,7 @@ class Map extends Component {
 
     //new layer, add it
     if (layers.length > prevProps.layers.length) {
-      let layer = layers[layers.length - 1];
+      let layer = layers[0];
       switch (layer.type) {
         case "point":
           this.addPointLayer(layer);
@@ -70,6 +70,10 @@ class Map extends Component {
     //Delete layers marked for deletion
     if (newProps.layersToDelete.length > 0) {
       newProps.layersToDelete.forEach(layer => this.removeMapLayer(layer));
+    }
+
+    if (newProps.layerToMove >= 0) {
+      this.updateLayerOrder(newProps.layerToMove);
     }
   }
 
@@ -131,6 +135,21 @@ class Map extends Component {
     this._map.setPaintProperty(layer.name, colorVariable, layer.color);
   }
 
+  updateLayerOrder(index) {
+    let layers = this.props.layers;
+    let layerToUpdateId = layers[index].name;
+    let layerBeforeId;
+    //If moved to the top of the list, don't draw it behind anything
+    if (index === 0) {
+      layerBeforeId = null;
+    }
+    //Else, move it to the spot behind the entry above it in the list
+    else {
+      layerBeforeId = layers[index - 1].name;
+    }
+    this._map.moveLayer(layerToUpdateId, layerBeforeId);
+  }
+
   render() {
     return (
       <div
@@ -152,7 +171,8 @@ const select = appState => {
   return {
     selectedLayer: appState.geometry.selectedLayer,
     layers: appState.geometry.layers,
-    layersToDelete: appState.geometry.layersToDelete
+    layersToDelete: appState.geometry.layersToDelete,
+    layerToMove: appState.geometry.layerToMove
   };
 };
 

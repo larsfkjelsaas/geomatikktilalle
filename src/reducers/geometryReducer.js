@@ -6,7 +6,8 @@ import {
   colorChange,
   geometryDeleteStarted,
   geometryDeleteFinalized,
-  dataListRearranged
+  layersRearranged,
+  layersRearrangedDone
 } from "./geometryCaseReducers";
 import { createReducer } from "./reducerUtilities";
 
@@ -16,6 +17,7 @@ export const initialGeometryState = {
   selectedLayer: -1,
   layers: [],
   layersToDelete: [],
+  layerToMove: -1,
   activeColor: "#001eff"
 };
 
@@ -26,6 +28,7 @@ export const geometryReducer = createReducer(initialGeometryState, {
   GEOMETRY_DELETE_STARTED: geometryDeleteStarted,
   GEOMETRY_DELETE_FINALIZED: geometryDeleteFinalized,
   LAYER_SELECTED: layerSelected,
-  DATA_LIST_REARRANGED: dataListRearranged,
+  DATA_LIST_REARRANGED: layersRearranged,
+  LAYERS_REARRANGED_DONE: layersRearrangedDone,
   COLOR_CHANGE: colorChange,
 })
