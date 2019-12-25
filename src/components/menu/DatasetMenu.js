@@ -10,10 +10,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import DataLayerPanel from "./DataLayerPanel";
+
 import {
   geometryStartDeletion,
-  selectLayer
+  selectLayer,
+  dataLayerDragEnd
 } from "../../action-creators/actionCreator";
 
 const useStyles = makeStyles(theme => ({
@@ -39,9 +42,27 @@ const DatasetMenu = ({
   selectedLayer,
   layers,
   geometryStartDeletion,
-  selectLayer
+  selectLayer,
+  dataLayerDragEnd
 }) => {
   const classes = useStyles();
+  
+  const onDragEnd = result => {
+    const { destination, source } = result;
+    //dropped outside of context or otherwise no destination
+    if (!destination) {
+      return;
+    }
+    //not moved
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    dataLayerDragEnd(result);
+  };
 
   return (
     <div className={classes.root}>
@@ -53,21 +74,35 @@ const DatasetMenu = ({
         >
           <Typography className={classes.heading}>Datasets</Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.details}>
-          <>
-            {layers.map((layer, index) => (
-              <div className="layer" key={layer.name}>
-                <DataLayerPanel
-                  name={layer.name}
-                  index={index}
-                  geometryStartDeletion={geometryStartDeletion}
-                  selectLayer={selectLayer}
-                  selectedLayer={selectedLayer}
-                ></DataLayerPanel>
-              </div>
-            ))}
-          </>
-        </ExpansionPanelDetails>
+        <DragDropContext onDragEnd={onDragEnd}>
+          {/* Everything that is shown on the open panel, but not the closed */}
+          <ExpansionPanelDetails className={classes.details}>
+            <div>
+              <Droppable droppableId="datasetMenu">
+                {provided => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    provided={provided}
+                  >
+                    {layers.map((layer, index) => (
+                      <DataLayerPanel
+                        className="layer"
+                        key={layer.name}
+                        name={layer.name}
+                        index={index}
+                        geometryStartDeletion={geometryStartDeletion}
+                        selectLayer={selectLayer}
+                        selectedLayer={selectedLayer}
+                      ></DataLayerPanel>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
+          </ExpansionPanelDetails>
+        </DragDropContext>
       </ExpansionPanel>
     </div>
   );
@@ -80,7 +115,8 @@ const select = appState => ({
 
 const actions = {
   geometryStartDeletion: geometryStartDeletion,
-  selectLayer: selectLayer
+  selectLayer: selectLayer,
+  dataLayerDragEnd: dataLayerDragEnd
 };
 
 export default connect(select, actions)(DatasetMenu);

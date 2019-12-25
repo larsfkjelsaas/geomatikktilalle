@@ -5,7 +5,8 @@ import {
   layerSelected,
   colorChange,
   geometryDeleteStarted,
-  geometryDeleteFinalized
+  geometryDeleteFinalized,
+  dataListRearranged
 } from "./geometryCaseReducers";
 import { createReducer } from "./reducerUtilities";
 
@@ -25,5 +26,6 @@ export const geometryReducer = createReducer(initialGeometryState, {
   GEOMETRY_DELETE_STARTED: geometryDeleteStarted,
   GEOMETRY_DELETE_FINALIZED: geometryDeleteFinalized,
   LAYER_SELECTED: layerSelected,
-  COLOR_CHANGE: colorChange
+  DATA_LIST_REARRANGED: dataListRearranged,
+  COLOR_CHANGE: colorChange,
 })

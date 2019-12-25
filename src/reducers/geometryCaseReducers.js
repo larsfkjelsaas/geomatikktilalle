@@ -1,4 +1,5 @@
 import createBuffer from "../components/analysis/buffer";
+import { moveItemInArray } from "./reducerUtilities";
 
 export const analysisChosen = (state, action) => {
   return {
@@ -19,7 +20,6 @@ export const analysisTriggered = (state, action) => {
 };
 
 export const geometryCreateTriggered = (state, action) => {
-  console.log(action);
   let geometry = action.payload;
   let name = findUniqueName(state, geometry);
 
@@ -32,13 +32,13 @@ export const geometryCreateTriggered = (state, action) => {
 };
 
 export const geometryDeleteStarted = (state, action) => {
-    const layerToDelete = state.layers.find(
-        layer => layer.name === action.payload
-      );
-      return {
-        ...state,
-        layersToDelete: [...state.layersToDelete, layerToDelete]
-      };
+  const layerToDelete = state.layers.find(
+    layer => layer.name === action.payload
+  );
+  return {
+    ...state,
+    layersToDelete: [...state.layersToDelete, layerToDelete]
+  };
 };
 
 export const geometryDeleteFinalized = (state, action) => {
@@ -61,6 +61,22 @@ export const layerSelected = (state, action) => {
     ...state,
     selectedLayer: layerIndex
   };
+};
+
+export const dataListRearranged = (state, action) => {
+  const layers = Array.from(state.layers);
+  const { destination, source } = action.payload;
+  const newLayers = moveItemInArray(layers, source.index, destination.index);
+  var selectedLayer = state.selectedLayer;
+  if(source.index === selectedLayer){
+    selectedLayer = destination.index
+  }
+
+  return {
+    ...state,
+    layers: newLayers,
+    selectedLayer: selectedLayer
+  }
 };
 
 export const colorChange = (state, action) => {

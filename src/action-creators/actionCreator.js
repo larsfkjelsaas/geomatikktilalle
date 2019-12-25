@@ -53,13 +53,19 @@ export const selectColor = hex => ({
   payload: hex
 });
 
+export const dataLayerDragEnd = result => ({
+  type: "DATA_LIST_REARRANGED",
+  payload: result
+});
+
 export const geometryActions = bindActionCreators(
   {
     geometryCreateNew,
     geometryStartDeletion,
     geomatryFinalizeDeletion,
     selectLayer,
-    selectColor
+    selectColor,
+    dataLayerDragEnd
   },
   store.dispatch
 );

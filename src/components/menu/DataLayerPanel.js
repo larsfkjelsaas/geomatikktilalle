@@ -9,6 +9,7 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,31 +39,34 @@ const DataLayerPanel = ({
 }) => {
   const classes = useStyles();
   return (
-    <ExpansionPanel
-      expanded={index === selectedLayer}
-      onChange={() => selectLayer(index)}
-    >
-      <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel2a-content"
-        id="panel2a-header"
-        // onClick={() => selectLayer(index)}
-      >
-        <Typography className={classes.heading}>{name}</Typography>
-        {/* <Typography className={classes.secondaryHeading}>
-          {"    "} Buffer of barnehager
-        </Typography> */}
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <CardActions className={classes.actions}>
-          <Button size="small">Details</Button>
-          <Button size="small">Edit</Button>
-          <Button size="small" onClick={() => geometryStartDeletion(name)}>
-            Delete
-          </Button>
-        </CardActions>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    <Draggable draggableId={name} index={index}>
+      {provided => (
+        <ExpansionPanel
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          innerRef={provided.innerRef}
+          expanded={index === selectedLayer}
+          onChange={() => selectLayer(index)}
+        >
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            <Typography className={classes.heading}>{name}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <CardActions className={classes.actions}>
+              <Button size="small">Details</Button>
+              <Button size="small">Edit</Button>
+              <Button size="small" onClick={() => geometryStartDeletion(name)}>
+                Delete
+              </Button>
+            </CardActions>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      )}
+    </Draggable>
   );
 };
 
