@@ -51,15 +51,33 @@ export const geometryDeleteFinalized = (state, action) => {
   };
 };
 
-export const layerSelected = (state, action) => {
+export const layerExpanded = (state, action) => {
   let layerIndex = action.payload;
   //Pane is already open, close it instead
-  if (state.selectedLayer === layerIndex) {
+  if (state.expandedLayer === layerIndex) {
     layerIndex = -1;
   }
   return {
     ...state,
-    selectedLayer: layerIndex
+    expandedLayer: layerIndex
+  };
+};
+
+export const layerSelected = (state, action) => {
+  let layerName = action.payload;
+  let newSelectedLayers = Array.from(state.selectedLayers);
+  let index = newSelectedLayers.indexOf(layerName);
+
+  //If found remove, else add to selected layers
+  if (index >= 0) {
+    newSelectedLayers.splice(index, 1);
+  } else {
+    newSelectedLayers = [...newSelectedLayers, layerName];
+  }
+
+  return {
+    ...state,
+    selectedLayers: newSelectedLayers
   };
 };
 
@@ -67,24 +85,26 @@ export const layersRearranged = (state, action) => {
   const layers = Array.from(state.layers);
   const { destination, source } = action.payload;
   const newLayers = moveItemInArray(layers, source.index, destination.index);
-  var selectedLayer = state.selectedLayer;
-  if(source.index === selectedLayer){
-    selectedLayer = destination.index
+  
+  //Update reference to expanded layer
+  var expandedLayer = state.expandedLayer;
+  if (source.index === expandedLayer) {
+    expandedLayer = destination.index;
   }
 
   return {
     ...state,
     layers: newLayers,
-    selectedLayer: selectedLayer,
+    expandedLayer: expandedLayer,
     layerToMove: destination.index
-  }
+  };
 };
 
 export const layersRearrangedDone = (state, action) => {
   return {
     ...state,
     layerToMove: -1
-  }
+  };
 };
 
 export const colorChange = (state, action) => {
@@ -117,18 +137,21 @@ export const colorChange = (state, action) => {
 
 function resolveBufferTrigger(state, action) {
   var { value } = action.payload;
-  var geom = state.layers[state.selectedLayer].geometry;
-  var bufferGeom = createBuffer(geom, value);
-
-  var name = state.layers[state.selectedLayer].name;
-  name = findUniqueName(state, geom, name, "_buffer");
-
-  var layer = {
-    geometry: bufferGeom,
-    name: name,
-    type: "polygon"
-  };
-  state = addLayer(state, layer, "buffer");
+  state.selectedLayers.forEach(selectedLayerName => {
+    let selectedLayer = state.layers.find(element => element.name === selectedLayerName);
+    let index = state.layers.indexOf(selectedLayer);
+    console.log(index);
+    let geom = state.layers[index].geometry;
+    let bufferGeom = createBuffer(geom,value);
+    let name = state.layers[index].name;
+    name = findUniqueName(state, geom, name, "_buffer");
+    let layer = {
+      geometry: bufferGeom,
+      name: name,
+      type: "polygon"
+    }
+    state = addLayer(state, layer, "buffer");
+  })
 
   return state;
 }
@@ -140,15 +163,14 @@ function addLayer(state, layer, analysisType = "new") {
   //Initialize color
   layer.color = state.activeColor;
   //If no layer was selected previously, select this
-  let selectedLayer = state.selectedLayer;
-  if (selectedLayer === -1) {
-    selectedLayer = 0;
-  }
+  // let selectedLayer = state.selectedLayer;
+  // if (selectedLayer === -1) {
+  //   selectedLayer = 0;
+  // }
   state = {
     ...state,
     layers: [layer, ...state.layers],
-    triggeredAnalyses: [...state.triggeredAnalyses, analysisType],
-    selectedLayer: selectedLayer
+    triggeredAnalyses: [...state.triggeredAnalyses, analysisType]
   };
   return state;
 }

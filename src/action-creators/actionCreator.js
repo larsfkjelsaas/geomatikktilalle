@@ -43,10 +43,16 @@ export const geomatryFinalizeDeletion = () => ({
   type: "GEOMETRY_DELETE_FINALIZED"
 });
 
-export const selectLayer = index => ({
-  type: "LAYER_SELECTED",
+export const expandLayer = index => ({
+  type: "LAYER_EXPANDED",
   payload: index
 });
+
+export const selectLayer = name => ({
+  type: "LAYER_SELECTED",
+  payload: name
+});
+
 
 export const selectColor = hex => ({
   type: "COLOR_CHANGE",
@@ -63,6 +69,7 @@ export const geometryActions = bindActionCreators(
     geometryCreateNew,
     geometryStartDeletion,
     geomatryFinalizeDeletion,
+    expandLayer,
     selectLayer,
     selectColor,
     dataLayerDragEnd

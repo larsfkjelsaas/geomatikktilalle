@@ -4,12 +4,15 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   CardActions,
-  Button
+  Button,
+  Checkbox,
+  FormControlLabel
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Draggable } from "react-beautiful-dnd";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,8 +37,9 @@ const DataLayerPanel = ({
   name,
   index,
   geometryStartDeletion,
+  expandLayer,
   selectLayer,
-  selectedLayer
+  expandedLayer
 }) => {
   const classes = useStyles();
   return (
@@ -45,15 +49,32 @@ const DataLayerPanel = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           innerRef={provided.innerRef}
-          expanded={index === selectedLayer}
-          onChange={() => selectLayer(index)}
+          expanded={index === expandedLayer}
+          onChange={() => expandLayer(index)}
         >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
+            aria-label="Expand"
+            aria-controls="additional-actions1-content"
+            id="additional-actions1-header"
           >
-            <Typography className={classes.heading}>{name}</Typography>
+            <FormControlLabel
+              aria-label="Select"
+              onClick={event => {
+                //Filter out the double onclick when clicking on the text
+                if (event.target.type === "checkbox") {
+                  selectLayer(name);
+                }
+                //Want to stop expansion effect, just select
+                event.stopPropagation();
+              }}
+              onFocus={event => {
+                event.stopPropagation();
+              }}
+              control={<Checkbox />}
+              label={name}
+            />
+            {/* <Typography className={classes.heading}>{name}</Typography> */}
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <CardActions className={classes.actions}>

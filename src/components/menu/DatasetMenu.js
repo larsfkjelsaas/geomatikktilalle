@@ -4,7 +4,8 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   CardActions,
-  Button
+  Button,
+  List
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -15,8 +16,9 @@ import DataLayerPanel from "./DataLayerPanel";
 
 import {
   geometryStartDeletion,
-  selectLayer,
-  dataLayerDragEnd
+  expandLayer,
+  dataLayerDragEnd,
+  selectLayer
 } from "../../action-creators/actionCreator";
 
 const useStyles = makeStyles(theme => ({
@@ -39,9 +41,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DatasetMenu = ({
-  selectedLayer,
+  expandedLayer,
   layers,
   geometryStartDeletion,
+  expandLayer,
   selectLayer,
   dataLayerDragEnd
 }) => {
@@ -77,7 +80,7 @@ const DatasetMenu = ({
         <DragDropContext onDragEnd={onDragEnd}>
           {/* Everything that is shown on the open panel, but not the closed */}
           <ExpansionPanelDetails className={classes.details}>
-            <div>
+            <List>
               <Droppable droppableId="datasetMenu">
                 {provided => (
                   <div
@@ -92,15 +95,16 @@ const DatasetMenu = ({
                         name={layer.name}
                         index={index}
                         geometryStartDeletion={geometryStartDeletion}
+                        expandLayer={expandLayer}
                         selectLayer={selectLayer}
-                        selectedLayer={selectedLayer}
+                        expandedLayer={expandedLayer}
                       ></DataLayerPanel>
                     ))}
                     {provided.placeholder}
                   </div>
                 )}
               </Droppable>
-            </div>
+            </List>
           </ExpansionPanelDetails>
         </DragDropContext>
       </ExpansionPanel>
@@ -109,12 +113,13 @@ const DatasetMenu = ({
 };
 
 const select = appState => ({
-  selectedLayer: appState.geometry.selectedLayer,
+  expandedLayer: appState.geometry.expandedLayer,
   layers: appState.geometry.layers
 });
 
 const actions = {
   geometryStartDeletion: geometryStartDeletion,
+  expandLayer: expandLayer,
   selectLayer: selectLayer,
   dataLayerDragEnd: dataLayerDragEnd
 };
