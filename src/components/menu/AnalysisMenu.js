@@ -3,14 +3,21 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  CardActions,
-  Button
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from "@material-ui/core";
+import CropIcon from "@material-ui/icons/Crop";
+import DraftsIcon from "@material-ui/icons/Drafts";
+
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { analysisTriggered } from "../../action-creators/actionCreator";
 import { connect } from "react-redux";
+import BufferDialog from "./BufferDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AnalysisMenu = ({analysisTriggered}) => {
+const AnalysisMenu = ({ analysisTriggered }) => {
   const classes = useStyles();
 
   return (
@@ -43,17 +50,30 @@ const AnalysisMenu = ({analysisTriggered}) => {
           <Typography className={classes.heading}>Analysis</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          <Button
-            onClick={() => analysisTriggered({ type: "buffer", value: 200 })}
-          >
-            Buffer
-          </Button>
-          <Button onClick={() => analysisTriggered({ type: "intersection" })}>
-            Intersection
-          </Button>
-          <Button onClick={() => analysisTriggered({ type: "dissolve" })}>
-            Dissolve
-          </Button>
+          <List dense={true} component="nav" aria-label="main mailbox folders">
+            <BufferDialog analysisTriggered={analysisTriggered}></BufferDialog>
+            <ListItem
+              button
+              onClick={() => analysisTriggered({ type: "intersection" })}
+            >
+              <ListItemIcon>
+                <CropIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Intersection"
+                secondary="Find the overlap between two polygons"
+              />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Dissolve"
+                secondary="Combine polygons overlapping themselves"
+              />
+            </ListItem>
+          </List>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>

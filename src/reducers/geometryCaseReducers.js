@@ -1,5 +1,14 @@
-import createBuffer from "../components/analysis/buffer";
-import { moveItemInArray } from "./reducerUtilities";
+import {
+  moveItemInArray,
+  updateItemByNameInLayers,
+  addLayer,
+  findUniqueName
+} from "./reducerUtilities";
+import {
+  resolveBufferTrigger,
+  resolveIntersectionTrigger,
+  resolveDissolveTrigger
+} from "./geometryAnalysis";
 
 export const analysisChosen = (state, action) => {
   return {
@@ -90,9 +99,12 @@ export const layerSelected = (state, action) => {
 };
 
 export const layersRearranged = (state, action) => {
-  const layers = Array.from(state.layers);
   const { destination, source } = action.payload;
-  const newLayers = moveItemInArray(layers, source.index, destination.index);
+  const newLayers = moveItemInArray(
+    state.layers,
+    source.index,
+    destination.index
+  );
 
   //Update reference to expanded layer
   var expandedLayer = state.expandedLayer;
@@ -116,109 +128,29 @@ export const layersRearrangedDone = (state, action) => {
 };
 
 export const colorChange = (state, action) => {
-  //Create a new layers array that is the same except for one color change to selected layer
-  if (state.selectedLayer >= 0) {
-    let layers = state.layers.map((layer, index) => {
-      if (index !== state.selectedLayer) {
-        return layer;
-      } else {
-        return {
-          ...layer,
-          color: action.payload
-        };
-      }
-    });
-
-    state = {
-      ...state,
-      activeColor: action.payload,
-      layers: layers
+  const changeLayerColor = (layer, args) => {
+    let color = args[0];
+    let newLayer = {
+      ...layer,
+      color: color
     };
-  } else {
-    state = {
-      ...state,
-      activeColor: action.payload
-    };
-  }
-  return state;
-};
-
-function resolveBufferTrigger(state, action) {
-  var value = action.payload.value;
-  state.selectedLayers.forEach(selectedLayerName => {
-    let selectedLayer = state.layers.find(
-      element => element.name === selectedLayerName
-    );
-    let index = state.layers.indexOf(selectedLayer);
-    let geom = state.layers[index].geometry;
-    let bufferGeom = createBuffer(geom, value);
-    let name = state.layers[index].name;
-    name = findUniqueName(state, geom, name, "_buffer");
-    let layer = {
-      geometry: bufferGeom,
-      name: name,
-      type: "polygon"
-    };
-    state = addLayer(state, layer, "buffer");
-  });
-
-  return state;
-}
-
-function resolveIntersectionTrigger(state, action){
-  alert("Intersection not implemented");
-  return state;
-}
-
-function resolveDissolveTrigger(state, action){
-  alert("Dissolve not implemented");
-  return state;
-}
-
-function addLayer(state, layer, analysisType = "new") {
-  //Make a separate variable for display name in case we want to change it in the UI
-  layer.displayName = layer.name;
-
-  //Initialize color
-  layer.color = state.activeColor;
-  //If no layer was selected previously, select this
-  // let selectedLayer = state.selectedLayer;
-  // if (selectedLayer === -1) {
-  //   selectedLayer = 0;
-  // }
-  state = {
-    ...state,
-    layers: [layer, ...state.layers],
-    triggeredAnalyses: [...state.triggeredAnalyses, analysisType]
+    return newLayer;
   };
-  return state;
-}
+  //Create a new layers array that is the same except for one color change to selected layer
+  let newColor = action.payload;
+  let newLayers = updateItemByNameInLayers(
+    state.layers,
+    state.selectedLayers,
+    changeLayerColor,
+    newColor
+  );
+  let newState = Array.from(state);
 
-function findUniqueName(state, geometry, name = "new_geometry", affix = "") {
-  //If no name is given and the dataset includes a name, use it
-  if (geometry.name && name === "new_geometry") {
-    name = geometry.name;
-  }
+  newState = {
+    ...state,
+    layers: newLayers,
+    activeColor: newColor
+  };
 
-  //append any affix, usually to signify how the layer was created (e.g _buffer)
-  name = name + affix;
-
-  //check whether name is already in use, and try appending _1, _2, _3 etc until a name not in use is found
-  function isNameUnique(name, layers) {
-    if (layers.find(layer => layer.name === name) === undefined) {
-      return true;
-    } else return false;
-  }
-
-  var originalName = name;
-  var nameIsUnique = isNameUnique(name, state.layers);
-  var i = 1;
-  while (!nameIsUnique) {
-    name = originalName + "_" + i;
-    i += 1;
-
-    nameIsUnique = isNameUnique(name, state.layers);
-  }
-
-  return name;
-}
+  return newState;
+};

@@ -39,6 +39,7 @@ const styledSidebar = styled(Sidebar)`
   grid-row-start: 2;
   grid-row-end: 3;
   background-color: #4e3a4c;
+  overflow: auto;
 `;
 
 const select = appState => {

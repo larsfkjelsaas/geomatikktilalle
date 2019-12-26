@@ -38,12 +38,12 @@ class Map extends Component {
 
   componentDidUpdate(prevProps) {
     var newProps = this.props;
-    var layers = newProps.layers;
+    var newLayers = newProps.layers;
     var prevLayers = prevProps.layers;
 
     //new layer, add it
-    if (layers.length > prevProps.layers.length) {
-      let layer = layers[0];
+    if (newLayers.length > prevLayers.length) {
+      let layer = newLayers[0];
       switch (layer.type) {
         case "point":
           this.addPointLayer(layer);
@@ -58,13 +58,14 @@ class Map extends Component {
     }
     //No new layers, can compare new and old props
     else {
-      if (layers.length > 0 && newProps.selectedLayer >= 0) {
-        let selected = newProps.selectedLayer;
-
-        if (layers[selected].color !== prevLayers[selected].color) {
-          this.setColorOfLayer(layers[selected]);
-        }
+      if(newProps.activeColor !== prevProps.activeColor){
+        newProps.selectedLayers.forEach(selectedLayerName => {
+          let selectedLayer = newProps.layers.find(layer => layer.name === selectedLayerName);
+          this.setColorOfLayer(selectedLayer);
+        });
+        
       }
+
     }
 
     //Delete layers marked for deletion
@@ -169,10 +170,11 @@ const StyledMap = styled(Map)`
 
 const select = appState => {
   return {
-    selectedLayer: appState.geometry.selectedLayer,
+    selectedLayers: appState.geometry.selectedLayers,
     layers: appState.geometry.layers,
     layersToDelete: appState.geometry.layersToDelete,
-    layerToMove: appState.geometry.layerToMove
+    layerToMove: appState.geometry.layerToMove,
+    activeColor: appState.geometry.activeColor
   };
 };
 
