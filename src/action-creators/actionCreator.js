@@ -17,9 +17,9 @@ export const analysisChoosen = analysisName => ({
   type: "ANLYSIS_CHOOSEN",
   payload: analysisName
 });
-export const analysisTriggered = value => ({
+export const analysisTriggered = analysis => ({
   type: "ANALYSIS_TRIGGERED",
-  payload: { value: value }
+  payload: analysis
 });
 
 export const analysisActions = bindActionCreators(

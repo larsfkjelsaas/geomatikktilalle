@@ -9,6 +9,8 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { analysisTriggered } from "../../action-creators/actionCreator";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AnalysisMenu = () => {
+const AnalysisMenu = ({analysisTriggered}) => {
   const classes = useStyles();
 
   return (
@@ -41,46 +43,28 @@ const AnalysisMenu = () => {
           <Typography className={classes.heading}>Analysis</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Buffer</Typography>
-              <Typography className={classes.secondaryHeading}>
-                {" "}
-                Created at 14:02
-              </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <CardActions className={classes.actions}>
-                <Button size="small">Details</Button>
-                <Button size="small">Edit</Button>
-                <Button size="small">Delete</Button>
-              </CardActions>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Intersection</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <CardActions className={classes.actions}>
-                <Button size="small">Details</Button>
-                <Button size="small">Edit</Button>
-                <Button size="small">Delete</Button>
-              </CardActions>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+          <Button
+            onClick={() => analysisTriggered({ type: "buffer", value: 200 })}
+          >
+            Buffer
+          </Button>
+          <Button onClick={() => analysisTriggered({ type: "intersection" })}>
+            Intersection
+          </Button>
+          <Button onClick={() => analysisTriggered({ type: "dissolve" })}>
+            Dissolve
+          </Button>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>
   );
 };
 
-export default AnalysisMenu;
+// const select = appState => {
+//   return {};
+// };
+const actions = {
+  analysisTriggered: analysisTriggered
+};
+
+export default connect(null, actions)(AnalysisMenu);

@@ -10,12 +10,20 @@ export const analysisChosen = (state, action) => {
 };
 
 export const analysisTriggered = (state, action) => {
-  switch (state.selectedAnalysis) {
-    case "buffer":
-      return resolveBufferTrigger(state, action);
-    default:
-      console.log("Selected analysis is invalid");
-      break;
+  if (action.payload.type) {
+    switch (action.payload.type.toLowerCase()) {
+      case "buffer":
+        return resolveBufferTrigger(state, action);
+      case "intersection":
+        return resolveIntersectionTrigger(state, action);
+      case "dissolve":
+        return resolveDissolveTrigger(state, action);
+      default:
+        console.log("Selected analysis is invalid");
+        return state;
+    }
+  } else {
+    return state;
   }
 };
 
@@ -85,7 +93,7 @@ export const layersRearranged = (state, action) => {
   const layers = Array.from(state.layers);
   const { destination, source } = action.payload;
   const newLayers = moveItemInArray(layers, source.index, destination.index);
-  
+
   //Update reference to expanded layer
   var expandedLayer = state.expandedLayer;
   if (source.index === expandedLayer) {
@@ -136,23 +144,34 @@ export const colorChange = (state, action) => {
 };
 
 function resolveBufferTrigger(state, action) {
-  var { value } = action.payload;
+  var value = action.payload.value;
   state.selectedLayers.forEach(selectedLayerName => {
-    let selectedLayer = state.layers.find(element => element.name === selectedLayerName);
+    let selectedLayer = state.layers.find(
+      element => element.name === selectedLayerName
+    );
     let index = state.layers.indexOf(selectedLayer);
-    console.log(index);
     let geom = state.layers[index].geometry;
-    let bufferGeom = createBuffer(geom,value);
+    let bufferGeom = createBuffer(geom, value);
     let name = state.layers[index].name;
     name = findUniqueName(state, geom, name, "_buffer");
     let layer = {
       geometry: bufferGeom,
       name: name,
       type: "polygon"
-    }
+    };
     state = addLayer(state, layer, "buffer");
-  })
+  });
 
+  return state;
+}
+
+function resolveIntersectionTrigger(state, action){
+  alert("Intersection not implemented");
+  return state;
+}
+
+function resolveDissolveTrigger(state, action){
+  alert("Dissolve not implemented");
   return state;
 }
 
