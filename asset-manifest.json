@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/geomatikk-til-alle/static/js/main.41815828.chunk.js",
-    "main.js.map": "/geomatikk-til-alle/static/js/main.41815828.chunk.js.map",
-    "runtime-main.js": "/geomatikk-til-alle/static/js/runtime-main.6f943ac9.js",
-    "runtime-main.js.map": "/geomatikk-til-alle/static/js/runtime-main.6f943ac9.js.map",
-    "static/js/2.a8329984.chunk.js": "/geomatikk-til-alle/static/js/2.a8329984.chunk.js",
-    "static/js/2.a8329984.chunk.js.map": "/geomatikk-til-alle/static/js/2.a8329984.chunk.js.map",
-    "index.html": "/geomatikk-til-alle/index.html",
-    "precache-manifest.26d0180bfa21f9fb2427a9321747b222.js": "/geomatikk-til-alle/precache-manifest.26d0180bfa21f9fb2427a9321747b222.js",
-    "service-worker.js": "/geomatikk-til-alle/service-worker.js",
-    "static/js/2.a8329984.chunk.js.LICENSE": "/geomatikk-til-alle/static/js/2.a8329984.chunk.js.LICENSE"
+    "main.js": "/geomatikktilalle/static/js/main.0e01db1a.chunk.js",
+    "main.js.map": "/geomatikktilalle/static/js/main.0e01db1a.chunk.js.map",
+    "runtime-main.js": "/geomatikktilalle/static/js/runtime-main.1e0de411.js",
+    "runtime-main.js.map": "/geomatikktilalle/static/js/runtime-main.1e0de411.js.map",
+    "static/js/2.3930e6ce.chunk.js": "/geomatikktilalle/static/js/2.3930e6ce.chunk.js",
+    "static/js/2.3930e6ce.chunk.js.map": "/geomatikktilalle/static/js/2.3930e6ce.chunk.js.map",
+    "index.html": "/geomatikktilalle/index.html",
+    "precache-manifest.89e8627289963aa9a5771fe13d8918d3.js": "/geomatikktilalle/precache-manifest.89e8627289963aa9a5771fe13d8918d3.js",
+    "service-worker.js": "/geomatikktilalle/service-worker.js",
+    "static/js/2.3930e6ce.chunk.js.LICENSE": "/geomatikktilalle/static/js/2.3930e6ce.chunk.js.LICENSE"
   },
   "entrypoints": [
-    "static/js/runtime-main.6f943ac9.js",
-    "static/js/2.a8329984.chunk.js",
-    "static/js/main.41815828.chunk.js"
+    "static/js/runtime-main.1e0de411.js",
+    "static/js/2.3930e6ce.chunk.js",
+    "static/js/main.0e01db1a.chunk.js"
   ]
 }
