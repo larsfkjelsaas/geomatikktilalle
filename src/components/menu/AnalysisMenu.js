@@ -64,7 +64,10 @@ const AnalysisMenu = ({ analysisTriggered }) => {
                 secondary="Find the overlap between two polygons"
               />
             </ListItem>
-            <ListItem button>
+            <ListItem
+              button
+              onClick={() => analysisTriggered({ type: "dissolve" })}
+            >
               <ListItemIcon>
                 <DraftsIcon />
               </ListItemIcon>

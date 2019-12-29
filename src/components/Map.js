@@ -157,11 +157,8 @@ class Map extends Component {
   }
 
   updateVisibility(layer) {
-    console.log(this._map.getLayer(layer.name));
     var layerVisibility = layer.visible ? "visible" : "none";
-    var visibility = this._map.setLayoutProperty(layer.name, 'visibility', layerVisibility);
-    console.log(visibility);
-    console.log("logic: " + layer.visible);
+    this._map.setLayoutProperty(layer.name, 'visibility', layerVisibility);
   }
 
   render() {

@@ -1,6 +1,7 @@
 import { findUniqueName, addLayer } from "./reducerUtilities";
 import createBuffer from "../components/analysis/buffer";
 import createIntersect from "../components/analysis/intersection";
+import createDissolve from "../components/analysis/dissolve";
 
 export function resolveBufferTrigger(state, action) {
   var value = action.payload.value;
@@ -11,7 +12,7 @@ export function resolveBufferTrigger(state, action) {
     let index = state.layers.indexOf(selectedLayer);
     let geom = state.layers[index].geometry;
     let bufferGeom = createBuffer(geom, value);
-    let name = state.layers[index].name;
+    let name = state.layers[index].name.substring(0, 8);
     name = findUniqueName(state, geom, name, "_buffer");
     let layer = {
       geometry: bufferGeom,
@@ -65,6 +66,34 @@ export function resolveIntersectionTrigger(state, action) {
 }
 
 export function resolveDissolveTrigger(state, action) {
-  alert("Dissolve not implemented");
+  if (state.selectedLayers.length !== 1) {
+    alert("Please choose exactly one layer to dissolve");
+    return state;
+  }
+
+  let selectedLayer = state.layers.find(
+    element => element.name === state.selectedLayers[0]
+  );
+  let index = state.layers.indexOf(selectedLayer);
+
+  let geom = selectedLayer.geometry;
+  console.log(geom.type);
+  if (geom.type !== "FeatureCollection") {
+    alert("Dissolve requires a FeatureCollection layer to be selected");
+    return state;
+  }
+
+  let dissolveGeom = createDissolve(geom);
+
+  let name = state.layers[index].name.substring(0, 8);
+  name = findUniqueName(state, geom, name, "_dissolve");
+  let layer = {
+    geometry: dissolveGeom,
+    name: name,
+    type: "polygon"
+  };
+
+  state = addLayer(state, layer, "dissolve");
+
   return state;
 }
