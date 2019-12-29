@@ -8,7 +8,8 @@ import {
   geometryDeleteStarted,
   geometryDeleteFinalized,
   layersRearranged,
-  layersRearrangedDone
+  layersRearrangedDone,
+  layerVisibilityTrigger
 } from "./geometryCaseReducers";
 import { createReducer } from "./reducerUtilities";
 
@@ -34,4 +35,5 @@ export const geometryReducer = createReducer(initialGeometryState, {
   DATA_LIST_REARRANGED: layersRearranged,
   LAYERS_REARRANGED_DONE: layersRearrangedDone,
   COLOR_CHANGE: colorChange,
+  LAYER_VISIBILITY_TRIGGER: layerVisibilityTrigger
 })

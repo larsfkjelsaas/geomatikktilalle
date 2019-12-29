@@ -1,9 +1,3 @@
-export function updateObject(oldObject, newValues) {
-  // Encapsulate the idea of passing a new object as the first parameter
-  // to Object.assign to ensure we correctly copy data instead of mutating
-  return Object.assign({}, oldObject, newValues);
-}
-
 export function updateItemInLayersId(state, itemId, updateItemCallback) {
   const updatedItems = state.layers.map(item => {
     if (item.id !== itemId) {
@@ -89,6 +83,9 @@ export function addLayer(state, layer, analysisType = "new") {
 
   //Initialize color
   layer.color = state.activeColor;
+
+  //Set visibility
+  layer.visible = true;
 
   state = {
     ...state,

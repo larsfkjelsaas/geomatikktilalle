@@ -127,6 +127,26 @@ export const layersRearrangedDone = (state, action) => {
   };
 };
 
+export const layerVisibilityTrigger = (state, action) => {
+  const changeVisibility = (layer) => {
+    console.log("hello 2");
+    let visible = !(layer.visible);
+    let newLayer = {
+      ...layer,
+      visible: visible
+    };
+    return newLayer;
+  }
+  console.log("hello 1")
+  let newLayers = updateItemByNameInLayers(state.layers, [action.payload], changeVisibility);
+  
+  state = {
+    ...state,
+    layers: newLayers
+  }
+  return state;
+}
+
 export const colorChange = (state, action) => {
   const changeLayerColor = (layer, args) => {
     let color = args[0];

@@ -39,7 +39,8 @@ const DataLayerPanel = ({
   geometryStartDeletion,
   expandLayer,
   selectLayer,
-  expandedLayer
+  expandedLayer,
+  layerVisibilityTrigger
 }) => {
   const classes = useStyles();
   return (
@@ -78,8 +79,15 @@ const DataLayerPanel = ({
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <CardActions className={classes.actions}>
-              <Button size="small">Details</Button>
-              <Button size="small">Edit</Button>
+              <Button
+                size="small"
+                onClick={() => alert("Renaming not yet implemented")}
+              >
+                Rename
+              </Button>
+              <Button size="small" onClick={() => layerVisibilityTrigger(name)}>
+                Toggle visibility
+              </Button>
               <Button size="small" onClick={() => geometryStartDeletion(name)}>
                 Delete
               </Button>

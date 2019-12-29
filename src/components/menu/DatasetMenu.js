@@ -3,8 +3,6 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  CardActions,
-  Button,
   List
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -18,7 +16,8 @@ import {
   geometryStartDeletion,
   expandLayer,
   dataLayerDragEnd,
-  selectLayer
+  selectLayer,
+  layerVisibilityTrigger
 } from "../../action-creators/actionCreator";
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +45,8 @@ const DatasetMenu = ({
   geometryStartDeletion,
   expandLayer,
   selectLayer,
-  dataLayerDragEnd
+  dataLayerDragEnd,
+  layerVisibilityTrigger
 }) => {
   const classes = useStyles();
   
@@ -98,6 +98,7 @@ const DatasetMenu = ({
                         expandLayer={expandLayer}
                         selectLayer={selectLayer}
                         expandedLayer={expandedLayer}
+                        layerVisibilityTrigger={layerVisibilityTrigger}
                       ></DataLayerPanel>
                     ))}
                     {provided.placeholder}
@@ -121,7 +122,8 @@ const actions = {
   geometryStartDeletion: geometryStartDeletion,
   expandLayer: expandLayer,
   selectLayer: selectLayer,
-  dataLayerDragEnd: dataLayerDragEnd
+  dataLayerDragEnd: dataLayerDragEnd,
+  layerVisibilityTrigger: layerVisibilityTrigger
 };
 
 export default connect(select, actions)(DatasetMenu);

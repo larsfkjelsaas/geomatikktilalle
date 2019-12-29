@@ -2,17 +2,6 @@ import { bindActionCreators } from "redux";
 
 import store from "../store/store";
 
-const doAdditionToCount = amount => ({ type: "ADD", payload: amount });
-const doSubtractionToCount = amount => ({ type: "SUBTRACT", payload: amount });
-
-export const mathActions = bindActionCreators(
-  {
-    add: doAdditionToCount,
-    subtract: doSubtractionToCount
-  },
-  store.dispatch
-);
-
 export const analysisChoosen = analysisName => ({
   type: "ANLYSIS_CHOOSEN",
   payload: analysisName
@@ -64,6 +53,11 @@ export const dataLayerDragEnd = result => ({
   payload: result
 });
 
+export const layerVisibilityTrigger = layer => ({
+  type: "LAYER_VISIBILITY_TRIGGER",
+  payload: layer
+})
+
 export const geometryActions = bindActionCreators(
   {
     geometryCreateNew,
@@ -72,7 +66,8 @@ export const geometryActions = bindActionCreators(
     expandLayer,
     selectLayer,
     selectColor,
-    dataLayerDragEnd
+    dataLayerDragEnd,
+    layerVisibilityTrigger
   },
   store.dispatch
 );

@@ -58,14 +58,19 @@ class Map extends Component {
     }
     //No new layers, can compare new and old props
     else {
-      if(newProps.activeColor !== prevProps.activeColor){
+      if (newProps.activeColor !== prevProps.activeColor) {
         newProps.selectedLayers.forEach(selectedLayerName => {
-          let selectedLayer = newProps.layers.find(layer => layer.name === selectedLayerName);
+          let selectedLayer = newProps.layers.find(
+            layer => layer.name === selectedLayerName
+          );
           this.setColorOfLayer(selectedLayer);
         });
-        
       }
 
+      //Loop over layers to check for differences
+      newProps.layers.forEach(layer => {
+        this.updateVisibility(layer);
+      });
     }
 
     //Delete layers marked for deletion
@@ -106,7 +111,7 @@ class Map extends Component {
       //   "fill-color": "#00ff00",
       //   "fill-opacity": 0.2
       // },
-      paint: { "fill-color": layer.color }
+      paint: { "fill-color": layer.color, "fill-outline-color": "#000000" }
     });
 
     this.setState({
@@ -149,6 +154,14 @@ class Map extends Component {
       layerBeforeId = layers[index - 1].name;
     }
     this._map.moveLayer(layerToUpdateId, layerBeforeId);
+  }
+
+  updateVisibility(layer) {
+    console.log(this._map.getLayer(layer.name));
+    var layerVisibility = layer.visible ? "visible" : "none";
+    var visibility = this._map.setLayoutProperty(layer.name, 'visibility', layerVisibility);
+    console.log(visibility);
+    console.log("logic: " + layer.visible);
   }
 
   render() {
