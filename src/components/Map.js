@@ -40,21 +40,26 @@ class Map extends Component {
     var newProps = this.props;
     var newLayers = newProps.layers;
     var prevLayers = prevProps.layers;
-
     //new layer, add it
     if (newLayers.length > prevLayers.length) {
-      let layer = newLayers[0];
-      switch (layer.type) {
-        case "point":
-          this.addPointLayer(layer);
-          break;
-        case "polygon":
-          this.addPolygonLayer(layer);
-          break;
-        default:
-          console.log("invalid layer type");
-          break;
-      }
+      let numberOfNewLayers = newLayers.length - prevLayers.length;
+      for(var i = 0; i < numberOfNewLayers; i++){
+        let layer = newLayers[i];
+        switch (layer.type) {
+          case "point":
+            this.addPointLayer(layer);
+            break;
+          case "linestring":
+            this.addLineLayer(layer);
+            break;
+          case "polygon":
+            this.addPolygonLayer(layer);
+            break;
+          default:
+            console.log("invalid layer type");
+            break;
+        }
+      }      
     }
     //No new layers, can compare new and old props
     else {
@@ -94,6 +99,21 @@ class Map extends Component {
       paint: { "circle-color": layer.color }
     });
 
+    this.setState({
+      activeLayers: [...this.state.activeLayers, newLayer]
+    });
+  }
+
+  addLineLayer(layer) {
+    let newLayer = this._map.addLayer({
+      id: layer.name,
+      type: "line",
+      source: {
+        type: "geojson",
+        data: layer.geometry
+      },
+      paint: { "line-color": layer.color }
+    });
     this.setState({
       activeLayers: [...this.state.activeLayers, newLayer]
     });
@@ -158,7 +178,7 @@ class Map extends Component {
 
   updateVisibility(layer) {
     var layerVisibility = layer.visible ? "visible" : "none";
-    this._map.setLayoutProperty(layer.name, 'visibility', layerVisibility);
+    this._map.setLayoutProperty(layer.name, "visibility", layerVisibility);
   }
 
   render() {

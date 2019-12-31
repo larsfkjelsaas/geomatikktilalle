@@ -90,7 +90,7 @@ export function addLayer(state, layer, analysisType = "new") {
   state = {
     ...state,
     layers: [layer, ...state.layers],
-    triggeredAnalyses: [...state.triggeredAnalyses, analysisType]
+    triggeredAnalysis: [...state.triggeredAnalysis, analysisType]
   };
   return state;
 }

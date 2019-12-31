@@ -7,14 +7,16 @@ import {
 import {
   resolveBufferTrigger,
   resolveIntersectionTrigger,
-  resolveDissolveTrigger
+  resolveDissolveTrigger,
+  resolveUnionTrigger,
+  resolveDifferenceTrigger
 } from "./geometryAnalysis";
 
 export const analysisChosen = (state, action) => {
   return {
     ...state,
     selectedAnalysis: action.payload,
-    triggeredAnalyses: [...state.triggeredAnalyses, action.payload]
+    triggeredAnalysis: [...state.triggeredAnalysis, action.payload]
   };
 };
 
@@ -27,6 +29,10 @@ export const analysisTriggered = (state, action) => {
         return resolveIntersectionTrigger(state, action);
       case "dissolve":
         return resolveDissolveTrigger(state, action);
+      case "union":
+        return resolveUnionTrigger(state, action);
+      case "difference":
+        return resolveDifferenceTrigger(state, action);
       default:
         console.log("Selected analysis is invalid");
         return state;
@@ -39,11 +45,12 @@ export const analysisTriggered = (state, action) => {
 export const geometryCreateTriggered = (state, action) => {
   let geometry = action.payload;
   let name = findUniqueName(state, geometry);
-
+  let firstFeature = geometry.features[0];
+  let type = firstFeature.geometry.type.toLowerCase();
   var layer = {
     geometry: geometry,
     name: name,
-    type: "point"
+    type: type
   };
   return addLayer(state, layer);
 };
@@ -128,24 +135,26 @@ export const layersRearrangedDone = (state, action) => {
 };
 
 export const layerVisibilityTrigger = (state, action) => {
-  const changeVisibility = (layer) => {
-    console.log("hello 2");
-    let visible = !(layer.visible);
+  const changeVisibility = layer => {
+    let visible = !layer.visible;
     let newLayer = {
       ...layer,
       visible: visible
     };
     return newLayer;
-  }
-  console.log("hello 1")
-  let newLayers = updateItemByNameInLayers(state.layers, [action.payload], changeVisibility);
-  
+  };
+  let newLayers = updateItemByNameInLayers(
+    state.layers,
+    [action.payload],
+    changeVisibility
+  );
+
   state = {
     ...state,
     layers: newLayers
-  }
+  };
   return state;
-}
+};
 
 export const colorChange = (state, action) => {
   const changeLayerColor = (layer, args) => {

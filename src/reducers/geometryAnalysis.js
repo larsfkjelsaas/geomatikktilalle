@@ -1,10 +1,15 @@
 import { findUniqueName, addLayer } from "./reducerUtilities";
-import createBuffer from "../components/analysis/buffer";
-import createIntersect from "../components/analysis/intersection";
-import createDissolve from "../components/analysis/dissolve";
+import createBuffer from "../analysis/buffer";
+import createIntersect from "../analysis/intersection";
+import createDissolve from "../analysis/dissolve";
+import createUnion from "../analysis/union";
 
 export function resolveBufferTrigger(state, action) {
   var value = action.payload.value;
+  if (state.selectedLayers.length === 0) {
+    alert("Please select a feature first");
+    return state;
+  }
   state.selectedLayers.forEach(selectedLayerName => {
     let selectedLayer = state.layers.find(
       element => element.name === selectedLayerName
@@ -96,4 +101,64 @@ export function resolveDissolveTrigger(state, action) {
   state = addLayer(state, layer, "dissolve");
 
   return state;
+}
+
+export function resolveUnionTrigger(state, action) {
+  if (state.selectedLayers.length < 2) {
+    alert("Select at least two layers to do an union");
+    return state;
+  }
+
+  let selectedLayers = findSelectedLayers(state);
+  selectedLayers.forEach(selectedLayer => {
+    if(selectedLayer.layer.type === "polygon"){
+      alert("All layers selected must be polygon layers");
+      return state;
+    }
+  });
+    
+  let geometries = selectedLayers.map(currentLayer => {
+    return currentLayer.layer.geometry
+  });
+
+  let unionGeom = createUnion(geometries);
+
+
+  let name = "union";
+  name = findUniqueName(state, selectedLayers[0].layer, name);
+  let layer = {
+    geometry: unionGeom,
+    name: name,
+    type: "polygon"
+  };
+
+  state = addLayer(state, layer, "union");
+
+  return state;
+}
+
+export function resolveDifferenceTrigger(state, action) {
+  if (state.selectedLayers.length !== 2) {
+    alert("Select two layers to do a difference");
+    return state;
+  }
+  let selectedLayers = findSelectedLayers(state);
+
+  return state;
+}
+
+function findSelectedLayers(state) {
+  let selectedLayers = [];
+  state.selectedLayers.forEach(selectedLayerName => {
+    let layer = state.layers.find(
+      element => element.name === selectedLayerName
+    );
+    let index = state.layers.indexOf(layer);
+    let selectedLayer = {
+      layer: layer,
+      index: index
+    };
+    selectedLayers = [...selectedLayers, selectedLayer];
+  });
+  return selectedLayers;
 }

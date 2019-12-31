@@ -15,7 +15,7 @@ import { createReducer } from "./reducerUtilities";
 
 export const initialGeometryState = {
   selectedAnalysis: "buffer",
-  triggeredAnalyses: [],
+  triggeredAnalysis: [],
   expandedLayer: -1,
   selectedLayers: [],
   layers: [],
